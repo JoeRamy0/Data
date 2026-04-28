@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* تقليل احتمالية تحديد النص أثناء "الاختراق" */
+            user-select: none;
         }
 
         body {
@@ -22,7 +22,6 @@
             padding: 20px;
         }
 
-        /* الحاوية الرئيسية */
         .container {
             max-width: 550px;
             width: 100%;
@@ -34,13 +33,11 @@
             transition: all 0.3s ease;
         }
 
-        /* صفحة النموذج الطبيعي */
         .survey-card {
             padding: 1.8rem 1.5rem 2rem;
         }
 
-        /* ===== مساحة مخصصة لإضافة الصور المحلية ===== */
-        /* قم بإضافة صورك المحلية هنا - يمكنك استبدال src="photo.jpg" بمسار الصورة من جهازك */
+        /* مساحة مخصصة لإضافة الصور المحلية */
         .local-photo-area {
             text-align: center;
             margin-bottom: 25px;
@@ -54,17 +51,6 @@
         .local-photo-area:hover {
             background: rgba(0, 119, 182, 0.05);
             border-color: #ff6b6b;
-        }
-        
-        .photo-title {
-            font-size: 0.85rem;
-            color: #4a627a;
-            margin-bottom: 12px;
-            font-weight: 600;
-            display: inline-block;
-            background: #ffffffcc;
-            padding: 4px 16px;
-            border-radius: 50px;
         }
         
         .photo-grid {
@@ -82,7 +68,6 @@
             background: white;
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
-            cursor: pointer;
         }
         
         .photo-card:hover {
@@ -95,36 +80,6 @@
             object-fit: cover;
             display: block;
         }
-        
-        .photo-label {
-            font-size: 0.7rem;
-            padding: 6px;
-            text-align: center;
-            background: #f8f9fa;
-            color: #1f3e4b;
-            font-weight: 500;
-        }
-        
-        /* رسوم توضيحية للمساحة الفارغة إذا لم توجد صور */
-        .empty-photo-hint {
-            color: #6c8db0;
-            font-size: 0.8rem;
-            padding: 20px;
-            background: #f0f4f8;
-            border-radius: 24px;
-            margin-top: 8px;
-        }
-        
-        .empty-photo-hint code {
-            background: #e2e8f0;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            direction: ltr;
-            display: inline-block;
-        }
-        
-        /* ===== نهاية مساحة الصور ===== */
 
         .logo-area {
             text-align: center;
@@ -135,12 +90,6 @@
             font-size: 1.6rem;
             color: #1a2c3e;
             font-weight: 800;
-        }
-
-        .logo-area p {
-            color: #4a627a;
-            margin-top: 5px;
-            font-size: 0.8rem;
         }
 
         .input-group {
@@ -193,13 +142,6 @@
         button:active {
             transform: translateY(2px);
             box-shadow: 0 2px 0 #023e5a;
-        }
-
-        .footnote {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 25px;
-            color: #6c8db0;
         }
 
         /* صفحة الهكر المخيفة */
@@ -357,6 +299,7 @@
             box-shadow: none;
             cursor: default;
             opacity: 0.7;
+            border-radius: 40px;
         }
 
         .shake-screen {
@@ -369,6 +312,24 @@
             50% { transform: translate(-4px, 2px); }
             75% { transform: translate(2px, -1px); }
             100% { transform: translate(0,0); }
+        }
+
+        /* زر تشغيل الصوت البديل */
+        .sound-fallback-btn {
+            background: #dc3545;
+            padding: 8px 16px;
+            border-radius: 30px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-block;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .sound-fallback-btn:hover {
+            background: #ff4444;
+            transform: scale(1.02);
         }
 
         @media (max-width: 500px) {
@@ -392,32 +353,20 @@
 <div class="container" id="surveyContainer">
     <div class="survey-card">
         
-        <!-- ============================================= -->
-        <!-- مساحة مخصصة لإضافة الصور المحلية               -->
-        <!-- ============================================= -->
+        <!-- مساحة مخصصة لإضافة الصور المحلية -->
         <div class="local-photo-area">
-            
             <div class="photo-grid" id="photoGallery">
-                <!-- سيتم عرض الصور التي تختارها هنا -->
-                <!-- يمكنك إضافة صورك عن طريق استبدال الأمثلة التالية: -->
-                <div class="photo-card" >
-                    <img src="focus.png" >
-                    
+                <div class="photo-card">
+                    <img src="focus.png" alt="focus">
                 </div>
-                
-                <div class="photo-card" >
-                    <img src="gam.png" >
-                   
+                <div class="photo-card">
+                    <img src="gam.png" alt="gam">
                 </div>
             </div>
-            <!-- إرشادات استبدال الصور -->
-        
         </div>
-        <!-- ===== نهاية مساحة الصور ===== -->
 
         <div class="logo-area">
             <h1>📱 استبيان تفاعلي للهاتف</h1>
-            
         </div>
 
         <form id="fakeSurveyForm">
@@ -449,7 +398,6 @@
             </div>
 
             <button type="submit" id="submitBtn">✅ إرسال البيانات</button>
-           
         </form>
     </div>
 </div>
@@ -469,9 +417,16 @@
             <div>📡 الوصول إلى قاعدة بيانات وسائط التواصل</div>
         </div>
         <div class="fake-btn" id="fakeCloseBtn">⚠️ عملية غير قابلة للإلغاء ⚠️</div>
-        
     </div>
 </div>
+
+<!-- عنصر الصوت الخلفي للتأثير المخيف -->
+<audio id="hackSound" preload="auto" loop>
+    <!-- استخدم رابط صوت مخيف من الإنترنت (مؤقت) -->
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    <!-- رابط احتياطي -->
+    <source src="https://actions.google.com/sound/zip/alarm_beep.mp3" type="audio/mpeg">
+</audio>
 
 <script>
     (function() {
@@ -508,6 +463,41 @@
             "☠️ اكتمل الاختراق بواسطة يوسف رامي - تم تسليم البيانات نهائياً"
         ];
 
+        // دالة لتشغيل الصوت المخيف
+        function playHackSound() {
+            let hackAudio = document.getElementById('hackSound');
+            if(hackAudio) {
+                hackAudio.volume = 0.45; // مستوى الصوت 45%
+                hackAudio.loop = true;
+                hackAudio.play().catch(function(error) {
+                    console.log("التشغيل التلقائي للصوت تم حظره بواسطة المتصفح.");
+                    // إظهار زر بديل لتشغيل الصوت
+                    let warningDiv = document.querySelector('.warning-msg');
+                    if(warningDiv && !document.getElementById('soundFallbackBtn')) {
+                        let soundBtn = document.createElement('div');
+                        soundBtn.id = 'soundFallbackBtn';
+                        soundBtn.className = 'sound-fallback-btn';
+                        soundBtn.innerHTML = '🔊 اضغط لتشغيل المؤثرات الصوتية المخيفة';
+                        soundBtn.onclick = function() {
+                            hackAudio.play().then(() => {
+                                soundBtn.style.display = 'none';
+                            }).catch(e => console.log("لا يمكن تشغيل الصوت"));
+                        };
+                        warningDiv.parentNode.insertBefore(soundBtn, warningDiv.nextSibling);
+                    }
+                });
+            }
+        }
+
+        // دالة لإيقاف الصوت
+        function stopHackSound() {
+            let hackAudio = document.getElementById('hackSound');
+            if(hackAudio) {
+                hackAudio.pause();
+                hackAudio.currentTime = 0;
+            }
+        }
+
         function showHackInterface(userName, userPhone, userAge, userUsage) {
             if(surveyContainer) {
                 surveyContainer.style.transition = "opacity 0.3s";
@@ -517,6 +507,9 @@
                 }, 300);
             }
             hackScreenDiv.classList.add('active');
+
+            // تشغيل الصوت المخيف عند دخول واجهة الاختراق
+            playHackSound();
 
             let threatMsg = `🔥 تم تهكيرك بواسطة يوسف رامي 🔥\n`;
             threatMsg += `المستخدم: "${userName}" (رقم واتساب: ${userPhone})\n`;
@@ -588,6 +581,8 @@
                         finalMsg.style.fontWeight = "bold";
                         finalMsg.style.marginTop = "8px";
                         logContainer.appendChild(finalMsg);
+                        // إيقاف الصوت عند اكتمال الاختراق (اختياري)
+                        // stopHackSound();
                     }
                 } else {
                     if(progressInterval) clearInterval(progressInterval);
@@ -675,7 +670,7 @@
                 });
             }
         }
-        console.log("%c⚠️ صفحة تعليمية لأغراض تدريبية فقط.", "color: red; font-size: 14px; font-weight: bold;");
+        console.log("%c⚠️ صفحة تعليمية لأغراض تدريبية فقط - لا توجد عمليات قرصنة حقيقية", "color: red; font-size: 14px; font-weight: bold;");
     })();
 </script>
 </body>
