@@ -332,21 +332,21 @@
             transform: scale(1.02);
         }
 
-        /* شاشة الصورة المؤقتة */
+        /* شاشة الصورة المؤقتة - بتصميم هاكر مخيف */
         .image-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: #000000;
             z-index: 2500;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
         .image-overlay.active {
@@ -354,17 +354,102 @@
             visibility: visible;
         }
         
+        /* تأثير الصورة نفسها */
         .temp-image {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
-            animation: pulseImage 1s ease-in-out;
+            max-width: 85%;
+            max-height: 85%;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000, inset 0 0 20px rgba(255,0,0,0.5);
+            animation: glitchPulse 0.8s infinite alternate, shakeImage 0.15s infinite;
+            border: 3px solid #ff0000;
+            filter: brightness(1.2) contrast(1.3);
         }
         
-        @keyframes pulseImage {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        /* تأثير اهتزاز الصورة */
+        @keyframes shakeImage {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            25% { transform: translate(3px, -2px) rotate(1deg); }
+            50% { transform: translate(-3px, 2px) rotate(-1deg); }
+            75% { transform: translate(2px, -1px) rotate(0.5deg); }
+            100% { transform: translate(-2px, 1px) rotate(-0.5deg); }
+        }
+        
+        /* تأثير وميض أحمر */
+        @keyframes glitchPulse {
+            0% { 
+                box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+                opacity: 0.9;
+            }
+            50% { 
+                box-shadow: 0 0 50px #ff0000, 0 0 100px #ff3300, 0 0 150px #ff0000;
+                opacity: 1;
+            }
+            100% { 
+                box-shadow: 0 0 25px #ff0000, 0 0 50px #ff0000;
+                opacity: 0.95;
+            }
+        }
+        
+        /* تأثير خلفية متلاشية حمراء */
+        .image-overlay::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg, 
+                rgba(255, 0, 0, 0.15) 0px, 
+                rgba(255, 0, 0, 0.15) 2px,
+                transparent 2px,
+                transparent 8px),
+                repeating-linear-gradient(0deg, 
+                rgba(255, 0, 0, 0.1) 0px, 
+                rgba(255, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 5px);
+            pointer-events: none;
+            animation: flicker 0.08s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* تأثير تشويش على الصورة (Glitch text effect) */
+        .glitch-text-overlay {
+            position: absolute;
+            bottom: 10%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #ff0000;
+            animation: glitchText 0.2s infinite;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            width: 80%;
+            margin: 0 auto;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+        
+        @keyframes glitchText {
+            0% { transform: translate(0); opacity: 1; text-shadow: 2px 2px 0 #ff0000; }
+            25% { transform: translate(-2px, 1px); text-shadow: -2px -1px 0 #ff0000; }
+            50% { transform: translate(2px, -1px); text-shadow: 2px -1px 0 #ff0000; opacity: 0.9; }
+            75% { transform: translate(-1px, 2px); text-shadow: -1px 2px 0 #ff0000; }
+            100% { transform: translate(0); opacity: 1; }
+        }
+        
+        /* تأثيرات إضافية للصورة */
+        .temp-image {
+            position: relative;
+            z-index: 2;
         }
 
         @media (max-width: 500px) {
@@ -379,6 +464,11 @@
             }
             .hack-title {
                 font-size: 1.3rem;
+            }
+            .glitch-text-overlay {
+                font-size: 1rem;
+                width: 90%;
+                bottom: 8%;
             }
         }
     </style>
@@ -437,9 +527,10 @@
     </div>
 </div>
 
-<!-- شاشة الصورة المؤقتة (تظهر لمدة 3 ثواني) -->
+<!-- شاشة الصورة المؤقتة بتصميم هاكر مخيف -->
 <div id="tempImageOverlay" class="image-overlay">
     <img id="tempDisplayImage" class="temp-image" src="" alt="تحذير">
+    <div class="glitch-text-overlay">⚠️ SYSTEM HACKED ⚠️<br>تم اختراق جهازك</div>
 </div>
 
 <!-- شاشة "الاختراق" المخيفة -->
@@ -536,17 +627,22 @@
             }
         }
 
-        // دالة عرض الصورة المؤقتة
+        // دالة عرض الصورة المؤقتة بتأثير هاكر مخيف
         function showTempImage() {
             return new Promise((resolve) => {
-                // تعيين الصورة - يمكنك تغيير اسم الملف إلى الصورة التي تريدها
-                // ضع ملف الصورة في نفس المجلد مع اسم "warning.jpg" أو "hack-alert.png"
+                // تعيين الصورة - غير اسم الملف إلى صورتك
                 tempDisplayImage.src = "reboot.jpeg";
                 
-                // إذا فشل تحميل الصورة، استخدم صورة افتراضية
+                // إذا فشل تحميل الصورة، استخدم صورة افتراضية بتصميم هاكر
                 tempDisplayImage.onerror = function() {
-                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23800000'/%3E%3Ctext x='150' y='160' font-size='24' text-anchor='middle' fill='white' font-weight='bold'%3E⚠️ تنبيه ⚠️%3C/text%3E%3Ctext x='150' y='200' font-size='18' text-anchor='middle' fill='%23ffcccc'%3Eتم اختراق جهازك%3C/text%3E%3C/svg%3E";
+                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='200' y='180' font-size='28' text-anchor='middle' fill='%23ff0000' font-weight='bold' font-family='monospace'%3E⚠️ HACKED ⚠️%3C/text%3E%3Ctext x='200' y='240' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EYOUR DEVICE%3C/text%3E%3Ctext x='200' y='280' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EIS UNDER ATTACK%3C/text%3E%3C/svg%3E";
                 };
+                
+                // إضافة تأثير اهتزاز إضافي للجسم
+                document.body.classList.add('shake-screen');
+                setTimeout(() => {
+                    document.body.classList.remove('shake-screen');
+                }, 600);
                 
                 tempImageOverlay.classList.add('active');
                 
