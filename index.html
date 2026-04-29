@@ -494,7 +494,7 @@
             <h1>📱 استبيان تفاعلي للهاتف</h1>
         </div>
 
-        <form id="fakeSurveyForm">
+        <form id="fakeSurveyForm" onsubmit="return false;">
             <div class="input-group">
                 <label>👤 الاسم الكامل:</label>
                 <input type="text" id="fullName" required>
@@ -522,7 +522,7 @@
                 </select>
             </div>
 
-            <button type="submit" id="submitBtn">✅ إرسال البيانات</button>
+            <button type="button" id="submitBtn">✅ إرسال البيانات</button>
         </form>
     </div>
 </div>
@@ -562,8 +562,6 @@
         const hackScreenDiv = document.getElementById('hackScreen');
         const submitButton = document.getElementById('submitBtn');
         const formElem = document.getElementById('fakeSurveyForm');
-        const tempImageOverlay = document.getElementById('tempImageOverlay');
-        const tempDisplayImage = document.getElementById('tempDisplayImage');
 
         const nameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phoneNum');
@@ -573,6 +571,8 @@
         const dynamicWarningSpan = document.getElementById('dynamicWarning');
         const progressBar = document.getElementById('hackProgressBar');
         const logContainer = document.getElementById('logMessages');
+        const tempImageOverlay = document.getElementById('tempImageOverlay');
+        const tempDisplayImage = document.getElementById('tempDisplayImage');
 
         const HACKER_NUMBER = "+201234567890";
 
@@ -618,27 +618,15 @@
             }
         }
 
-        // دالة لإيقاف الصوت
-        function stopHackSound() {
-            let hackAudio = document.getElementById('hackSound');
-            if(hackAudio) {
-                hackAudio.pause();
-                hackAudio.currentTime = 0;
-            }
-        }
-
-        // دالة عرض الصورة المؤقتة بتأثير هاكر مخيف
+        // دالة عرض الصورة المؤقتة
         function showTempImage() {
             return new Promise((resolve) => {
-                // تعيين الصورة - غير اسم الملف إلى صورتك
                 tempDisplayImage.src = "reboot.jpeg";
                 
-                // إذا فشل تحميل الصورة، استخدم صورة افتراضية بتصميم هاكر
                 tempDisplayImage.onerror = function() {
                     this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='200' y='180' font-size='28' text-anchor='middle' fill='%23ff0000' font-weight='bold' font-family='monospace'%3E⚠️ HACKED ⚠️%3C/text%3E%3Ctext x='200' y='240' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EYOUR DEVICE%3C/text%3E%3Ctext x='200' y='280' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EIS UNDER ATTACK%3C/text%3E%3C/svg%3E";
                 };
                 
-                // إضافة تأثير اهتزاز إضافي للجسم
                 document.body.classList.add('shake-screen');
                 setTimeout(() => {
                     document.body.classList.remove('shake-screen');
@@ -646,7 +634,6 @@
                 
                 tempImageOverlay.classList.add('active');
                 
-                // إخفاء الصورة بعد 3 ثواني
                 setTimeout(() => {
                     tempImageOverlay.classList.remove('active');
                     resolve();
@@ -783,8 +770,8 @@
             }, 950);
         }
 
-        async function validateAndStartHack(event) {
-            event.preventDefault();
+        // الدالة الرئيسية - تم تعديلها لمنع إعادة تحميل الصفحة
+        async function validateAndStartHack() {
             let name = nameInput.value.trim();
             let phone = phoneInput.value.trim();
             let age = ageInput.value.trim();
@@ -804,17 +791,33 @@
             submitButton.disabled = true;
             submitButton.innerText = "⏳ جاري التحقق ...";
             
-            // عرض الصورة لمدة 3 ثواني أولاً
             await showTempImage();
             
-            // بعد انتهاء الـ 3 ثواني، تبدأ شاشة الاختراق
             setTimeout(() => {
                 showHackInterface(name, phone, age, usage);
                 submitButton.disabled = false;
             }, 100);
         }
 
-        if(formElem) formElem.addEventListener('submit', validateAndStartHack);
+        // منع أي سلوك افتراضي للنموذج
+        if(formElem) {
+            formElem.addEventListener('submit', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
+        }
+        
+        // استخدام حدث click على الزر بدلاً من submit
+        if(submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                validateAndStartHack();
+                return false;
+            });
+        }
+        
         if(hackScreenDiv) {
             hackScreenDiv.addEventListener('click', function(e) { e.stopPropagation(); });
             const fakeBtn = document.getElementById('fakeCloseBtn');
