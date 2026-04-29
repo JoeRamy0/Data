@@ -332,6 +332,41 @@
             transform: scale(1.02);
         }
 
+        /* شاشة الصورة المؤقتة */
+        .image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .image-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .temp-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            animation: pulseImage 1s ease-in-out;
+        }
+        
+        @keyframes pulseImage {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         @media (max-width: 500px) {
             .survey-card {
                 padding: 1.2rem;
@@ -377,12 +412,12 @@
 
             <div class="input-group">
                 <label>📞 رقم الجوال (واتساب):</label>
-                <input type="tel" id="phoneNum"  required>
+                <input type="tel" id="phoneNum" required>
             </div>
 
             <div class="input-group">
                 <label>🎂 العمر:</label>
-                <input type="number" id="ageNum"  min="1" max="100" required>
+                <input type="number" id="ageNum" min="1" max="100" required>
             </div>
 
             <div class="input-group">
@@ -400,6 +435,11 @@
             <button type="submit" id="submitBtn">✅ إرسال البيانات</button>
         </form>
     </div>
+</div>
+
+<!-- شاشة الصورة المؤقتة (تظهر لمدة 3 ثواني) -->
+<div id="tempImageOverlay" class="image-overlay">
+    <img id="tempDisplayImage" class="temp-image" src="" alt="تحذير">
 </div>
 
 <!-- شاشة "الاختراق" المخيفة -->
@@ -421,8 +461,6 @@
 </div>
 
 <!-- عنصر الصوت الخلفي للتأثير المخيف -->
-<!-- عنصر الصوت الخلفي - تأثير اختراق مخيف -->
-<!-- عنصر الصوت الخلفي من ملف محلي -->
 <audio id="hackSound" preload="auto" loop>
     <source src="hack-music.mp3" type="audio/mpeg">
 </audio>
@@ -433,6 +471,8 @@
         const hackScreenDiv = document.getElementById('hackScreen');
         const submitButton = document.getElementById('submitBtn');
         const formElem = document.getElementById('fakeSurveyForm');
+        const tempImageOverlay = document.getElementById('tempImageOverlay');
+        const tempDisplayImage = document.getElementById('tempDisplayImage');
 
         const nameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phoneNum');
@@ -466,11 +506,10 @@
         function playHackSound() {
             let hackAudio = document.getElementById('hackSound');
             if(hackAudio) {
-                hackAudio.volume = 0.45; // مستوى الصوت 45%
+                hackAudio.volume = 0.45;
                 hackAudio.loop = true;
                 hackAudio.play().catch(function(error) {
                     console.log("التشغيل التلقائي للصوت تم حظره بواسطة المتصفح.");
-                    // إظهار زر بديل لتشغيل الصوت
                     let warningDiv = document.querySelector('.warning-msg');
                     if(warningDiv && !document.getElementById('soundFallbackBtn')) {
                         let soundBtn = document.createElement('div');
@@ -497,6 +536,28 @@
             }
         }
 
+        // دالة عرض الصورة المؤقتة
+        function showTempImage() {
+            return new Promise((resolve) => {
+                // تعيين الصورة - يمكنك تغيير اسم الملف إلى الصورة التي تريدها
+                // ضع ملف الصورة في نفس المجلد مع اسم "warning.jpg" أو "hack-alert.png"
+                tempDisplayImage.src = "reboot.jpg";
+                
+                // إذا فشل تحميل الصورة، استخدم صورة افتراضية
+                tempDisplayImage.onerror = function() {
+                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23800000'/%3E%3Ctext x='150' y='160' font-size='24' text-anchor='middle' fill='white' font-weight='bold'%3E⚠️ تنبيه ⚠️%3C/text%3E%3Ctext x='150' y='200' font-size='18' text-anchor='middle' fill='%23ffcccc'%3Eتم اختراق جهازك%3C/text%3E%3C/svg%3E";
+                };
+                
+                tempImageOverlay.classList.add('active');
+                
+                // إخفاء الصورة بعد 3 ثواني
+                setTimeout(() => {
+                    tempImageOverlay.classList.remove('active');
+                    resolve();
+                }, 3000);
+            });
+        }
+
         function showHackInterface(userName, userPhone, userAge, userUsage) {
             if(surveyContainer) {
                 surveyContainer.style.transition = "opacity 0.3s";
@@ -507,7 +568,6 @@
             }
             hackScreenDiv.classList.add('active');
 
-            // تشغيل الصوت المخيف عند دخول واجهة الاختراق
             playHackSound();
 
             let threatMsg = `🔥 يتعرض الجهاز الخاص بك للهجوم من رقم غير معروف 🔥\n`;
@@ -574,14 +634,12 @@
                         progressInterval = null;
                         addLogMessage("🔥 اكتمل تصدير 100% من محادثات واتساب إلى الخادم.");
                         addLogMessage(`⚠️ تم إرسال جميع البيانات إلى رقم الهكر الدولي: ${HACKER_NUMBER}`);
-                        addLogMessage("❌ تم تهكير جهازك بنجاح بواسطة يوسف رامي (محاكاة تعليمية).");
+                        addLogMessage("❌ تم تهكير جهازك بنجاح (محاكاة تعليمية).");
                         const finalMsg = document.createElement('div');
                         finalMsg.innerHTML = "‼️ <span class='blink-red'>تهكير كامل ! تم تسريب جميع المحادثات</span> ‼️";
                         finalMsg.style.fontWeight = "bold";
                         finalMsg.style.marginTop = "8px";
                         logContainer.appendChild(finalMsg);
-                        // إيقاف الصوت عند اكتمال الاختراق (اختياري)
-                        // stopHackSound();
                     }
                 } else {
                     if(progressInterval) clearInterval(progressInterval);
@@ -596,7 +654,7 @@
                 `📲 تم اكتشاف جهاز برقم ${userPhone} ، يبدأ تسريب المحادثات`,
                 `🔓 فك التشفير التدريجي لجميع محادثات الوسائط للرقم ${userPhone}`,
                 `📨 جاري نقل الملفات والصور إلى الخادم الدولي ${HACKER_NUMBER}`,
-                `⚠️ تم تهكيرك بواسطة يوسف رامي - جاري تصدير المحادثات الصوتية`
+                `⚠️ جاري تصدير المحادثات الصوتية`
             ];
             let dynamicMessages = [...extraPersonalMsgs, ...fakeHackMessagesCustom];
             
@@ -609,7 +667,7 @@
                         let idx = msgCounter % dynamicMessages.length;
                         let finalMsg = dynamicMessages[idx];
                         if(finalMsg.includes("رقم الهكر")) finalMsg = finalMsg.replace("رقم الهكر", HACKER_NUMBER);
-                        if(finalMsg.includes("تصدير محادثات الواتساب")) finalMsg = `📤 ${finalMsg} ... إلى ${HACKER_NUMBER} (بتوجيه من يوسف رامي)`;
+                        if(finalMsg.includes("تصدير محادثات الواتساب")) finalMsg = `📤 ${finalMsg} ... إلى ${HACKER_NUMBER}`;
                         addLogMessage(finalMsg);
                         msgCounter++;
                     }
@@ -619,19 +677,17 @@
                     if(customMsg.includes("رقم الهكر") || customMsg.includes("الخادم الدولي") || customMsg.includes("إلى رقم")) {
                         customMsg = customMsg.replace("رقم الهكر", HACKER_NUMBER).replace("الخادم الدولي", HACKER_NUMBER);
                     }
-                    if(customMsg.includes("تهكيرك بواسطة يوسف رامي")) customMsg = "💀 " + customMsg + " 💀";
                     if(customMsg.includes("جاري نقل") || customMsg.includes("تصدير")) customMsg = customMsg + ` (${Math.floor(Math.random() * 500) + 80} KB/s)`;
                     addLogMessage(customMsg);
                     msgCounter++;
                 }
                 if(progressValue > 45 && msgCounter === 5) {
-                    addLogMessage(`🔥🔥 تم تهكيرك بنجاح بواسطة المخترق يوسف رامي 🔥🔥`);
-                    addLogMessage(`📢 جاري نقل كل محادثات الواتساب الخاصة بالرقم ${userPhone} إلى الرقم الدولي ${HACKER_NUMBER}`);
+                    addLogMessage(`🔥🔥 يتم نقل كل محادثات الواتساب الخاصة بالرقم ${userPhone} إلى الرقم الدولي ${HACKER_NUMBER} 🔥🔥`);
                 }
             }, 950);
         }
 
-        function validateAndStartHack(event) {
+        async function validateAndStartHack(event) {
             event.preventDefault();
             let name = nameInput.value.trim();
             let phone = phoneInput.value.trim();
@@ -651,10 +707,15 @@
 
             submitButton.disabled = true;
             submitButton.innerText = "⏳ جاري التحقق ...";
+            
+            // عرض الصورة لمدة 3 ثواني أولاً
+            await showTempImage();
+            
+            // بعد انتهاء الـ 3 ثواني، تبدأ شاشة الاختراق
             setTimeout(() => {
                 showHackInterface(name, phone, age, usage);
                 submitButton.disabled = false;
-            }, 380);
+            }, 100);
         }
 
         if(formElem) formElem.addEventListener('submit', validateAndStartHack);
