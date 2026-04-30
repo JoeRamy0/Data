@@ -576,7 +576,7 @@
         function showSuccessScreen() {
             return new Promise((resolve) => {
                 successOverlay.classList.add('active');
-                let countdown = 3;
+                let countdown = 8;
                 successTimerSpan.innerText = `سيتم التوجيه خلال ${countdown} ثواني`;
                 
                 timerInterval = setInterval(() => {
