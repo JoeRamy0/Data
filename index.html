@@ -332,124 +332,72 @@
             transform: scale(1.02);
         }
 
-        /* شاشة الصورة المؤقتة - بتصميم هاكر مخيف */
-        .image-overlay {
+        /* شاشة تم الإرسال بنجاح */
+        .success-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000000;
-            z-index: 2500;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2300;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
         
-        .image-overlay.active {
+        .success-overlay.active {
             opacity: 1;
             visibility: visible;
         }
         
-        /* تأثير الصورة نفسها */
-        .temp-image {
-            max-width: 85%;
-            max-height: 85%;
-            border-radius: 15px;
-            box-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000, inset 0 0 20px rgba(255,0,0,0.5);
-            animation: glitchPulse 0.8s infinite alternate, shakeImage 0.15s infinite;
-            border: 3px solid #ff0000;
-            filter: brightness(1.2) contrast(1.3);
-        }
-        
-        /* تأثير اهتزاز الصورة */
-        @keyframes shakeImage {
-            0% { transform: translate(0px, 0px) rotate(0deg); }
-            25% { transform: translate(3px, -2px) rotate(1deg); }
-            50% { transform: translate(-3px, 2px) rotate(-1deg); }
-            75% { transform: translate(2px, -1px) rotate(0.5deg); }
-            100% { transform: translate(-2px, 1px) rotate(-0.5deg); }
-        }
-        
-        /* تأثير وميض أحمر */
-        @keyframes glitchPulse {
-            0% { 
-                box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
-                opacity: 0.9;
-            }
-            50% { 
-                box-shadow: 0 0 50px #ff0000, 0 0 100px #ff3300, 0 0 150px #ff0000;
-                opacity: 1;
-            }
-            100% { 
-                box-shadow: 0 0 25px #ff0000, 0 0 50px #ff0000;
-                opacity: 0.95;
-            }
-        }
-        
-        /* تأثير خلفية متلاشية حمراء */
-        .image-overlay::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(90deg, 
-                rgba(255, 0, 0, 0.15) 0px, 
-                rgba(255, 0, 0, 0.15) 2px,
-                transparent 2px,
-                transparent 8px),
-                repeating-linear-gradient(0deg, 
-                rgba(255, 0, 0, 0.1) 0px, 
-                rgba(255, 0, 0, 0.1) 1px,
-                transparent 1px,
-                transparent 5px);
-            pointer-events: none;
-            animation: flicker 0.08s infinite;
-        }
-        
-        @keyframes flicker {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 0.3; }
-        }
-        
-        /* تأثير تشويش على الصورة (Glitch text effect) */
-        .glitch-text-overlay {
-            position: absolute;
-            bottom: 10%;
-            left: 0;
-            right: 0;
+        .success-card {
+            background: linear-gradient(145deg, #1a7a4a, #0e5a36);
+            padding: 40px 30px;
+            border-radius: 60px;
             text-align: center;
-            font-family: monospace;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ff0000;
-            text-shadow: 2px 2px 0 #000, -2px -2px 0 #ff0000;
-            animation: glitchText 0.2s infinite;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            width: 80%;
-            margin: 0 auto;
-            border-radius: 10px;
-            backdrop-filter: blur(4px);
+            max-width: 85%;
+            box-shadow: 0 0 50px rgba(0, 255, 0, 0.4);
+            border: 2px solid #00ff88;
+            animation: successPop 0.5s ease-out;
         }
         
-        @keyframes glitchText {
-            0% { transform: translate(0); opacity: 1; text-shadow: 2px 2px 0 #ff0000; }
-            25% { transform: translate(-2px, 1px); text-shadow: -2px -1px 0 #ff0000; }
-            50% { transform: translate(2px, -1px); text-shadow: 2px -1px 0 #ff0000; opacity: 0.9; }
-            75% { transform: translate(-1px, 2px); text-shadow: -1px 2px 0 #ff0000; }
-            100% { transform: translate(0); opacity: 1; }
+        @keyframes successPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
         }
         
-        /* تأثيرات إضافية للصورة */
-        .temp-image {
-            position: relative;
-            z-index: 2;
+        .success-icon {
+            font-size: 70px;
+            margin-bottom: 15px;
+            animation: checkBounce 0.6s ease;
+        }
+        
+        @keyframes checkBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .success-card h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .success-card p {
+            color: #ccffdd;
+            font-size: 1rem;
+        }
+        
+        .timer-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #aaffcc;
         }
 
         @media (max-width: 500px) {
@@ -465,10 +413,11 @@
             .hack-title {
                 font-size: 1.3rem;
             }
-            .glitch-text-overlay {
-                font-size: 1rem;
-                width: 90%;
-                bottom: 8%;
+            .success-card h2 {
+                font-size: 1.3rem;
+            }
+            .success-icon {
+                font-size: 50px;
             }
         }
     </style>
@@ -527,10 +476,14 @@
     </div>
 </div>
 
-<!-- شاشة الصورة المؤقتة بتصميم هاكر مخيف -->
-<div id="tempImageOverlay" class="image-overlay">
-    <img id="tempDisplayImage" class="temp-image" src="" alt="تحذير">
-    <div class="glitch-text-overlay">⚠️ SYSTEM HACKED ⚠️<br>تم اختراق جهازك</div>
+<!-- شاشة تم الإرسال بنجاح -->
+<div id="successOverlay" class="success-overlay">
+    <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h2>تم الإرسال بنجاح!</h2>
+        <p>جاري معالجة بياناتك...</p>
+        <div class="timer-text" id="successTimer">سيتم التوجيه خلال 3 ثواني</div>
+    </div>
 </div>
 
 <!-- شاشة "الاختراق" المخيفة -->
@@ -562,6 +515,8 @@
         const hackScreenDiv = document.getElementById('hackScreen');
         const submitButton = document.getElementById('submitBtn');
         const formElem = document.getElementById('fakeSurveyForm');
+        const successOverlay = document.getElementById('successOverlay');
+        const successTimerSpan = document.getElementById('successTimer');
 
         const nameInput = document.getElementById('fullName');
         const phoneInput = document.getElementById('phoneNum');
@@ -571,14 +526,13 @@
         const dynamicWarningSpan = document.getElementById('dynamicWarning');
         const progressBar = document.getElementById('hackProgressBar');
         const logContainer = document.getElementById('logMessages');
-        const tempImageOverlay = document.getElementById('tempImageOverlay');
-        const tempDisplayImage = document.getElementById('tempDisplayImage');
 
         const HACKER_NUMBER = "+201234567890";
 
         let progressValue = 0;
         let progressInterval = null;
         let logInterval = null;
+        let timerInterval = null;
 
         const fakeHackMessagesCustom = [
             "🔐 كسر التشفير الثنائي لحساب الواتساب...",
@@ -618,26 +572,24 @@
             }
         }
 
-        // دالة عرض الصورة المؤقتة
-        function showTempImage() {
+        // دالة عرض شاشة نجاح الإرسال
+        function showSuccessScreen() {
             return new Promise((resolve) => {
-                tempDisplayImage.src = "reboot.jpeg";
+                successOverlay.classList.add('active');
+                let countdown = 3;
+                successTimerSpan.innerText = `سيتم التوجيه خلال ${countdown} ثواني`;
                 
-                tempDisplayImage.onerror = function() {
-                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23000000'/%3E%3Ctext x='200' y='180' font-size='28' text-anchor='middle' fill='%23ff0000' font-weight='bold' font-family='monospace'%3E⚠️ HACKED ⚠️%3C/text%3E%3Ctext x='200' y='240' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EYOUR DEVICE%3C/text%3E%3Ctext x='200' y='280' font-size='20' text-anchor='middle' fill='%23ff6666' font-family='monospace'%3EIS UNDER ATTACK%3C/text%3E%3C/svg%3E";
-                };
-                
-                document.body.classList.add('shake-screen');
-                setTimeout(() => {
-                    document.body.classList.remove('shake-screen');
-                }, 600);
-                
-                tempImageOverlay.classList.add('active');
-                
-                setTimeout(() => {
-                    tempImageOverlay.classList.remove('active');
-                    resolve();
-                }, 3000);
+                timerInterval = setInterval(() => {
+                    countdown--;
+                    if(countdown >= 0) {
+                        successTimerSpan.innerText = `سيتم التوجيه خلال ${countdown} ثواني`;
+                    }
+                    if(countdown < 0) {
+                        clearInterval(timerInterval);
+                        successOverlay.classList.remove('active');
+                        resolve();
+                    }
+                }, 1000);
             });
         }
 
@@ -770,7 +722,7 @@
             }, 950);
         }
 
-        // الدالة الرئيسية - تم تعديلها لمنع إعادة تحميل الصفحة
+        // الدالة الرئيسية - تظهر شاشة النجاح أولاً ثم شاشة الاختراق
         async function validateAndStartHack() {
             let name = nameInput.value.trim();
             let phone = phoneInput.value.trim();
@@ -789,14 +741,15 @@
             if(!usage) { alert("اختر متوسط ساعات استخدام الهاتف"); usageSelect.focus(); return; }
 
             submitButton.disabled = true;
-            submitButton.innerText = "⏳ جاري التحقق ...";
+            submitButton.innerText = "⏳ جاري الإرسال ...";
             
-            await showTempImage();
+            // عرض شاشة "تم الإرسال بنجاح" لمدة 3 ثواني
+            await showSuccessScreen();
             
-            setTimeout(() => {
-                showHackInterface(name, phone, age, usage);
-                submitButton.disabled = false;
-            }, 100);
+            // بعد انتهاء الـ 3 ثواني، تبدأ شاشة الاختراق
+            showHackInterface(name, phone, age, usage);
+            submitButton.disabled = false;
+            submitButton.innerText = "✅ إرسال البيانات";
         }
 
         // منع أي سلوك افتراضي للنموذج
@@ -808,7 +761,7 @@
             });
         }
         
-        // استخدام حدث click على الزر بدلاً من submit
+        // استخدام حدث click على الزر
         if(submitButton) {
             submitButton.addEventListener('click', function(e) {
                 e.preventDefault();
